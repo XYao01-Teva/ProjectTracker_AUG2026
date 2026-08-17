@@ -1,0 +1,997 @@
+/* ---------------------------------------------------------------------
+   Design tokens
+   ------------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  --surface-1:      #fcfcfb;   /* card / chart surface */
+  --surface-2:      #f9f9f7;   /* page plane */
+  --surface-raised: #ffffff;
+
+  --text-primary:   #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted:     #898781;
+
+  --gridline:       #e1e0d9;
+  --border:         rgba(11, 11, 11, 0.10);
+  --border-strong:  #c3c2b7;
+
+  --accent:         #005670;   /* brand primary (deep teal) */
+  --accent-wash:    rgba(0, 86, 112, 0.10);
+  --accent-2:       #00A5A5;   /* brand secondary (cyan), used in gradients */
+
+  --status-not-started: #908A8D;
+  --status-in-progress: #3C7E79;
+  --status-at-risk:     #AFCB37;
+  --status-blocked:     #FB3449;
+  --status-complete:    #00A03B;
+
+  --status-not-started-text: #6b6568;
+  --status-in-progress-text: #2b5f5b;
+  --status-at-risk-text:     #6b7a1f;
+  --status-blocked-text:     #c81f34;
+  --status-complete-text:    #00782c;
+
+  --today-line: #AA198D;
+
+  --shadow-sm: 0 1px 2px rgba(11, 11, 11, 0.06);
+  --shadow-md: 0 4px 16px rgba(11, 11, 11, 0.08);
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --font-sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:where(:not([data-theme="light"])) {
+    color-scheme: dark;
+
+    --surface-1:      #1a1a19;
+    --surface-2:      #0d0d0d;
+    --surface-raised: #232322;
+
+    --text-primary:   #ffffff;
+    --text-secondary: #c3c2b7;
+    --text-muted:     #898781;
+
+    --gridline:       #2c2c2a;
+    --border:         rgba(255, 255, 255, 0.10);
+    --border-strong:  #383835;
+
+    --accent:         #00c2c2;
+    --accent-wash:    rgba(0, 194, 194, 0.16);
+    --accent-2:       #4fd1c5;
+
+    --status-not-started: #b8b3b6;
+    --status-in-progress: #5aa9a4;
+    --status-at-risk:     #c7dd5e;
+    --status-blocked:     #ff6b7a;
+    --status-complete:    #2ecc71;
+
+    --status-not-started-text: #c3c2b7;
+    --status-in-progress-text: #8fd6d0;
+    --status-at-risk-text:     #dcec8f;
+    --status-blocked-text:     #ff9aa6;
+    --status-complete-text:    #6bd66b;
+
+    --today-line: #c93aa8;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --surface-1:      #1a1a19;
+  --surface-2:      #0d0d0d;
+  --surface-raised: #232322;
+
+  --text-primary:   #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted:     #898781;
+
+  --gridline:       #2c2c2a;
+  --border:         rgba(255, 255, 255, 0.10);
+  --border-strong:  #383835;
+
+  --accent:         #00c2c2;
+  --accent-wash:    rgba(0, 194, 194, 0.16);
+  --accent-2:       #4fd1c5;
+
+  --status-not-started: #b8b3b6;
+  --status-in-progress: #5aa9a4;
+  --status-at-risk:     #c7dd5e;
+  --status-blocked:     #ff6b7a;
+  --status-complete:    #2ecc71;
+
+  --status-not-started-text: #c3c2b7;
+  --status-in-progress-text: #8fd6d0;
+  --status-at-risk-text:     #dcec8f;
+  --status-blocked-text:     #ff9aa6;
+  --status-complete-text:    #6bd66b;
+
+  --today-line: #c93aa8;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* ---------------------------------------------------------------------
+   Base
+   ------------------------------------------------------------------- */
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background: var(--surface-2);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.app-shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------------------------------------------------------------------
+   Topbar
+   ------------------------------------------------------------------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--surface-1);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+}
+
+.topbar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.brand-mark {
+  height: 32px;
+  width: auto;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.brand-text h1 {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.brand-sub {
+  margin: 1px 0 0;
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--surface-raised);
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.icon-btn:hover { color: var(--text-primary); border-color: var(--border-strong); }
+
+.icon-moon { display: none; }
+
+html[data-theme="dark"] .icon-sun { display: none; }
+html[data-theme="dark"] .icon-moon { display: inline-flex; }
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) .icon-sun { display: none; }
+  html:not([data-theme="light"]) .icon-moon { display: inline-flex; }
+}
+
+/* ---------------------------------------------------------------------
+   Layout
+   ------------------------------------------------------------------- */
+.content {
+  flex: 1;
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 28px 24px 48px;
+}
+
+/* ---------------------------------------------------------------------
+   Stat tiles
+   ------------------------------------------------------------------- */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-tile {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 16px 18px;
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.stat-tile-warn .stat-value {
+  color: var(--status-blocked-text);
+}
+
+.stat-label {
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.stat-value {
+  font-size: 26px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  font-variant-numeric: normal;
+}
+
+/* ---------------------------------------------------------------------
+   Overview panels (status distribution + strategic area cards)
+   ------------------------------------------------------------------- */
+.overview-panel {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  padding: 16px 18px 18px;
+  margin-bottom: 16px;
+}
+
+.overview-panel-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.overview-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.overview-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Stacked bar (status distribution) */
+.stacked-bar {
+  display: flex;
+  gap: 2px;
+  height: 28px;
+  border-radius: 7px;
+  overflow: hidden;
+  background: var(--surface-2);
+}
+
+.stacked-bar-segment {
+  position: relative;
+  height: 100%;
+  min-width: 3px;
+  cursor: pointer;
+  transition: filter 0.12s ease;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.stacked-bar-segment:hover,
+.stacked-bar-segment:focus-visible {
+  filter: brightness(1.08);
+  outline: none;
+}
+
+.stacked-bar-segment-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11.5px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.stacked-bar-segment.bar-at-risk .stacked-bar-segment-label { color: #33400a; }
+
+/* Strategic area cards */
+.area-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 10px;
+}
+
+.area-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.area-card:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+}
+
+.area-card:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.area-card.is-active {
+  background: var(--accent-wash);
+  border-color: var(--accent);
+}
+
+.area-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.area-card-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.3;
+}
+
+.area-card-count {
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.area-card .stacked-bar {
+  height: 8px;
+  border-radius: 4px;
+}
+
+.area-card .stacked-bar-segment-label { display: none; }
+
+.area-card-empty {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ---------------------------------------------------------------------
+   Controls
+   ------------------------------------------------------------------- */
+.controls-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+}
+
+.control {
+  display: flex;
+  align-items: center;
+}
+
+.search-control {
+  flex: 1;
+  min-width: 220px;
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0 10px;
+  gap: 8px;
+  color: var(--text-muted);
+}
+
+.search-control input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font: inherit;
+  color: var(--text-primary);
+  padding: 9px 0;
+  width: 100%;
+}
+
+select#area-filter,
+select#status-filter {
+  font: inherit;
+  color: var(--text-primary);
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 10px;
+  cursor: pointer;
+}
+
+.view-toggle {
+  display: flex;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  margin-left: auto;
+}
+
+.view-btn {
+  font: inherit;
+  font-size: 13.5px;
+  border: none;
+  background: var(--surface-1);
+  color: var(--text-secondary);
+  padding: 8px 16px;
+  cursor: pointer;
+}
+
+.view-btn + .view-btn { border-left: 1px solid var(--border); }
+
+.view-btn.is-active {
+  background: var(--accent-wash);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------
+   Legend
+   ------------------------------------------------------------------- */
+.legend-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.legend-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.status-not-started { background: var(--status-not-started); }
+.status-in-progress { background: var(--status-in-progress); }
+.status-at-risk      { background: var(--status-at-risk); }
+.status-blocked      { background: var(--status-blocked); }
+.status-complete     { background: var(--status-complete); }
+
+/* ---------------------------------------------------------------------
+   Panels
+   ------------------------------------------------------------------- */
+.panel {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.empty-state {
+  margin: 0;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* ---------------------------------------------------------------------
+   Gantt
+   ------------------------------------------------------------------- */
+.gantt-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.gantt-toolbar .view-btn {
+  padding: 6px 12px;
+  font-size: 12.5px;
+}
+
+.gantt-scroll {
+  overflow-x: auto;
+  cursor: grab;
+}
+
+.gantt-scroll.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.gantt-scroll.is-dragging * {
+  pointer-events: none;
+}
+
+.gantt {
+  min-width: 860px;
+}
+
+.gantt-header {
+  display: grid;
+  grid-template-columns: 270px 1fr;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--surface-1);
+}
+
+.gantt-header-label {
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid var(--border);
+  position: sticky;
+  left: 0;
+  z-index: 6;
+  background: var(--surface-1);
+}
+
+.gantt-months {
+  position: relative;
+  display: grid;
+}
+
+.gantt-month {
+  padding: 12px 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  border-right: 1px solid var(--gridline);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gantt-row {
+  display: grid;
+  grid-template-columns: 270px 1fr;
+  border-bottom: 1px solid var(--gridline);
+}
+
+.gantt-row:last-child { border-bottom: none; }
+
+.gantt-row-label {
+  padding: 14px 16px;
+  border-right: 1px solid var(--border);
+  min-width: 0;
+  position: sticky;
+  left: 0;
+  z-index: 5;
+  background: var(--surface-1);
+  box-shadow: 2px 0 6px -3px rgba(11, 11, 11, 0.15);
+}
+
+.gantt-row-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gantt-row-meta {
+  margin-top: 3px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  min-width: 0;
+}
+
+.category-tag {
+  display: inline-block;
+  min-width: 0;
+  max-width: 100%;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.owner-text {
+  flex-shrink: 0;
+}
+
+.gantt-row-track {
+  position: relative;
+  min-height: 52px;
+}
+
+.gantt-grid-lines {
+  position: absolute;
+  inset: 0;
+  display: grid;
+}
+
+.gantt-grid-lines span {
+  border-right: 1px solid var(--gridline);
+}
+
+.today-marker {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 0;
+  border-left: 2px dashed var(--today-line);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* The header carries its own marker + chip so the "Today" label has its
+   own row and never sits on top of month/week tick text. */
+.gantt-months .today-marker {
+  z-index: 3;
+}
+
+.today-chip {
+  position: absolute;
+  bottom: -9px;
+  transform: translateX(-50%);
+  background: var(--today-line);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 3px 7px;
+  border-radius: 999px;
+  white-space: nowrap;
+  box-shadow: 0 0 0 2px var(--surface-1);
+  z-index: 4;
+  pointer-events: none;
+}
+
+.gantt-bar {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 22px;
+  border-radius: 6px;
+  cursor: pointer;
+  min-width: 6px;
+  z-index: 1;
+  transition: filter 0.12s ease, outline-color 0.12s ease;
+  outline: 2px solid transparent;
+  outline-offset: 1px;
+}
+
+.gantt-bar:hover,
+.gantt-bar:focus-visible {
+  filter: brightness(1.08);
+  outline-color: var(--border-strong);
+}
+
+.gantt-bar:focus-visible { outline-color: var(--text-primary); }
+
+.gantt-bar--overdue {
+  outline: 2px dashed var(--status-blocked);
+  outline-offset: 2px;
+}
+
+.gantt-bar-remaining {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 0 6px 6px 0;
+  background: var(--surface-1);
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.gantt-bar-label {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.overdue-flag {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--status-blocked);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+  line-height: 1;
+  z-index: 2;
+  box-shadow: 0 0 0 2px var(--surface-1);
+}
+
+.bar-not-started { background: var(--status-not-started); }
+.bar-in-progress { background: var(--status-in-progress); }
+.bar-at-risk      { background: var(--status-at-risk); }
+.bar-blocked      { background: var(--status-blocked); }
+.bar-complete     { background: var(--status-complete); }
+
+.bar-at-risk .gantt-bar-label { color: #33400a; }
+
+/* ---------------------------------------------------------------------
+   Status chip (table view)
+   ------------------------------------------------------------------- */
+.status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 9px 3px 7px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+}
+
+.status-chip .legend-dot { width: 7px; height: 7px; }
+
+.status-chip.status-not-started { color: var(--status-not-started-text); }
+.status-chip.status-in-progress { color: var(--status-in-progress-text); }
+.status-chip.status-at-risk     { color: var(--status-at-risk-text); }
+.status-chip.status-blocked     { color: var(--status-blocked-text); }
+.status-chip.status-complete    { color: var(--status-complete-text); }
+
+/* ---------------------------------------------------------------------
+   Table view
+   ------------------------------------------------------------------- */
+.table-scroll { overflow-x: auto; }
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.data-table th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.data-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--gridline);
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.data-table th:first-child,
+.data-table td:first-child {
+  position: sticky;
+  left: 0;
+  background: var(--surface-1);
+  box-shadow: 2px 0 6px -3px rgba(11, 11, 11, 0.15);
+}
+
+.data-table th:first-child { z-index: 3; }
+.data-table td:first-child { z-index: 2; }
+
+.data-table tbody tr:hover td:first-child { background: var(--surface-2); }
+
+.data-table tr:last-child td { border-bottom: none; }
+
+.data-table td.owner-tbd {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.data-table tbody tr:hover { background: var(--surface-2); }
+
+.data-table tr.row-overdue td:first-child {
+  box-shadow: inset 3px 0 0 var(--status-blocked), 2px 0 6px -3px rgba(11, 11, 11, 0.15);
+}
+
+/* Progress meter (table view) */
+.progress-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.progress-meter {
+  position: relative;
+  width: 72px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--gridline);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.progress-meter-fill {
+  position: absolute;
+  inset: 0;
+  right: auto;
+  border-radius: 999px;
+  background: var(--accent);
+}
+
+.progress-meter-fill.fill-complete { background: var(--status-complete); }
+.progress-meter-fill.fill-overdue  { background: var(--status-blocked); }
+
+.progress-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+  min-width: 30px;
+}
+
+.progress-text.text-overdue { color: var(--status-blocked-text); font-weight: 600; }
+
+/* ---------------------------------------------------------------------
+   Tooltip
+   ------------------------------------------------------------------- */
+.tooltip {
+  position: fixed;
+  z-index: 100;
+  max-width: 260px;
+  background: var(--surface-raised);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-md);
+  padding: 10px 12px;
+  font-size: 12.5px;
+  pointer-events: none;
+}
+
+.tooltip-title {
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+
+.tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.tooltip-row strong { color: var(--text-primary); font-weight: 600; }
+
+.tooltip-row.tooltip-row-stack {
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tooltip-row.tooltip-row-stack strong {
+  font-weight: 400;
+  color: var(--text-secondary);
+  white-space: normal;
+}
+
+/* ---------------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------------- */
+.app-footer {
+  border-top: 1px solid var(--border);
+  padding: 16px 24px;
+  text-align: center;
+}
+
+.app-footer p {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.app-footer code {
+  background: var(--surface-1);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 1px 5px;
+  font-size: 11.5px;
+}
+
+/* ---------------------------------------------------------------------
+   Responsive
+   ------------------------------------------------------------------- */
+@media (max-width: 720px) {
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .area-cards { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+  .gantt-header, .gantt-row { grid-template-columns: 160px 1fr; }
+  .view-toggle { margin-left: 0; }
+}
